@@ -1,1 +1,3 @@
 # api-loan-and-product
+BuildStatus Test-Stage [![Build Status](https://dev.azure.com/interhyp/interhyp/_apis/build/status/Digital%20Products/Clans/Business%20Adaption/Partner%20Excellence%20I/DP.ExternalAPIGateway.Deploy.Gateway?branchName=master&stageName=Test)](https://dev.azure.com/interhyp/interhyp/_build/latest?definitionId=6&branchName=master)
+BuildStatus Prod-Stage [![Build Status](https://dev.azure.com/interhyp/interhyp/_apis/build/status/Digital%20Products/Clans/Business%20Adaption/Partner%20Excellence%20I/DP.ExternalAPIGateway.Deploy.Gateway?branchName=master&stageName=Production)](https://dev.azure.com/interhyp/interhyp/_build/latest?definitionId=6&branchName=master)
