@@ -1,0 +1,612 @@
+openapi: 3.0.1
+info:
+  title: Loan and Product
+  description: "Mit dieser API erhalten Sie die Möglichkeit verschiedene Zinsberechnungen durchzuführen  \nÜber 400 Bankpartner liefern die Basis für die Berechnungen"
+  version: v1
+servers:
+  - url: https://interhyp-external-api-management-production.azure-api.net/loan-and-product/v1
+    description: Production
+  - url: https://interhyp-external-api-management-test.azure-api.net/loan-and-product/v1
+    description: Test    
+paths:
+  /top-rate:
+    post:
+      tags:
+        - loan-and-product
+      summary: Topzins
+      description: "Mit diesem Endpunkt erhalten Sie die Berechnung des Topzins  \n**Möglicher Usecase**  \nErste Zinsindikation für Ihre Website Besucher"
+      operationId: top-rate
+      parameters:
+        - name: Authorization
+          in: header
+          description: "Access Token im Bearer Format (siehe API \"Authorisierung\")  \nBeispiel:  \nBearer xxx.yyy.zzz"
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopRateRequest'
+            example:
+              discriminator: ReasonBuyNewRequest
+              applicant:
+                country: DE
+                zip: '00135'
+                city: München
+              estate:
+                discriminator: EstateBuyNew
+                country: DE
+                zip: 81369
+                utilization: SELF_OCCUPIED
+                type: APARTMENT
+              venture:
+                discriminator: VentureBuyNew
+                amount: 85000
+                maturity: 15
+                repayment:
+                  repaymentType: AmortisationRepayment
+                  amortisation: 90
+                buyPrice: 300000
+      responses:
+        '200':
+          description: Erfolgreicher Aufruf mit Ergebnis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessTopRateResponse-json'
+        '401':
+          description: Authentifizierung fehlgeschlagen
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthProblem'
+        '403':
+          description: Zugriff verweigert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFC7807Problem'
+        '404':
+          description: Kein Zins verfügbar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFC7807Problem'
+        '500':
+          description: Interner Server Fehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFC7807Problem'
+components:
+  schemas:
+    TopRateRequest:
+      required:
+        - discriminator
+        - applicant
+      properties:
+        discriminator:
+          type: string
+          description: "Aufruftyp:\n  * `ReasonBuyNewRequest` - Request für den Kauf einer neugebauten Immobilie\n  * `ReasonBuyExistingRequest` - Request für den Kauf einer Bestandsimmobilie\n  * `ReasonConstructionRequest` - Request für ein eigenes Bauvorhaben\n  * `ReasonRenovationRequest` - Request für einen Umbau oder eine Modernisierung\n  * `ReasonDebtReschedulingRequest` - Request Daten für eine Anschlussfinanzierung\n  * `ReasonOtherCapitalFinancingRequest` - Request Daten für eine Kapitalbeschaffung\n"
+        applicant:
+          $ref: '#/components/schemas/Applicant'
+      description: Basis Request Daten
+      discriminator:
+        propertyName: discriminator
+    ReasonBuyNewRequest:
+      required:
+        - estate
+        - venture
+      allOf:
+        - $ref: '#/components/schemas/TopRateRequest'
+        - properties:
+            estate:
+              $ref: '#/components/schemas/EstateBuyNew'
+            venture:
+              $ref: '#/components/schemas/VentureBuyNew'
+      description: Request Daten für den Kauf einer neugebauten Immobilie
+    ReasonBuyExistingRequest:
+      required:
+        - estate
+        - venture
+      allOf:
+        - $ref: '#/components/schemas/TopRateRequest'
+        - properties:
+            estate:
+              $ref: '#/components/schemas/EstateBuyExisting'
+            venture:
+              $ref: '#/components/schemas/VentureBuyExisting'
+      description: Request Daten für den Kauf einer Bestandsimmobilie
+    ReasonConstructionRequest:
+      required:
+        - estate
+        - venture
+      allOf:
+        - $ref: '#/components/schemas/TopRateRequest'
+        - properties:
+            estate:
+              $ref: '#/components/schemas/EstateConstruction'
+            venture:
+              $ref: '#/components/schemas/VentureConstruction'
+      description: Request Daten für ein eigenes Bauvorhaben
+    ReasonRenovationRequest:
+      required:
+        - estate
+        - venture
+      allOf:
+        - $ref: '#/components/schemas/TopRateRequest'
+        - properties:
+            estate:
+              $ref: '#/components/schemas/EstateRenovation'
+            venture:
+              $ref: '#/components/schemas/VentureRenovation'
+      description: Request Daten für einen Umbau oder eine Modernisierung
+    ReasonDebtReschedulingRequest:
+      required:
+        - estate
+        - venture
+      allOf:
+        - $ref: '#/components/schemas/TopRateRequest'
+        - properties:
+            estate:
+              $ref: '#/components/schemas/EstateDebtRescheduling'
+            venture:
+              $ref: '#/components/schemas/VentureDebtRescheduling'
+      description: Request Daten für eine Anschlussfinanzierung
+    ReasonOtherCapitalFinancingRequest:
+      required:
+        - estate
+        - venture
+      allOf:
+        - $ref: '#/components/schemas/TopRateRequest'
+        - properties:
+            estate:
+              $ref: '#/components/schemas/EstateOtherCapitalFinancing'
+            venture:
+              $ref: '#/components/schemas/VentureOtherCapitalFinancing'
+      description: Request Daten für eine Kapitalbeschaffung
+    TopRateResponse:
+      properties:
+        nominalInterest:
+          minimum: 0.0
+          type: number
+          description: Sollzins in Prozent
+          example: 1.42
+        effectiveInterest:
+          minimum: 0.0
+          type: number
+          description: Effektivzins in Prozent
+          example: 1.43
+        monthlyRepayment:
+          minimum: 0.0
+          type: number
+          description: Monatliche Rückzahlung in Euro
+          example: 991.09
+        totalLoanDuration:
+          minimum: 0.0
+          type: integer
+          description: Gesamtlaufzeit in Monaten
+          example: 180
+        remainingDebtAfterFixedPeriod:
+          minimum: 0.0
+          type: number
+          description: Restschuld in Euro zum Zinsbindungsende
+          example: 106036.01
+      description: Ergebnis der Topzins Berechnung
+    Applicant:
+      properties:
+        country:
+          type: string
+          description: Land (ISO 3166 ALPHA-2).
+          example: DE
+        zip:
+          pattern: '^\d{4,5}$'
+          type: string
+          description: PLZ des aktuellen Wohnortes in Deutschland
+          example: '81369'
+        city:
+          type: string
+          description: aktueller Wohnort in Deutschland
+          example: München
+      description: Antragsteller
+    EstateBasic:
+      required:
+        - discriminator
+      properties:
+        discriminator:
+          type: string
+        country:
+          $ref: '#/components/schemas/EstateCountry'
+        zip:
+          $ref: '#/components/schemas/EstateZip'
+        utilization:
+          $ref: '#/components/schemas/EstateUtilization'
+      description: Basis-Immobiliendaten
+      discriminator:
+        propertyName: discriminator
+    EstateBuyNew:
+      allOf:
+        - $ref: '#/components/schemas/EstateBasic'
+        - properties:
+            type:
+              $ref: '#/components/schemas/EstateTypeBuyNew'
+      description: Immobiliendaten für den Kauf einer neugebauten Immobilie
+    EstateBuyExisting:
+      allOf:
+        - $ref: '#/components/schemas/EstateBasic'
+        - properties:
+            type:
+              $ref: '#/components/schemas/EstateTypeAll'
+      description: Immobiliendaten für den Kauf einer Bestandsimmobilie
+    EstateConstruction:
+      allOf:
+        - $ref: '#/components/schemas/EstateBasic'
+        - properties:
+            type:
+              $ref: '#/components/schemas/EstateTypeConstruction'
+      description: Immobiliendaten für ein eigenes Bauvorhaben
+    EstateRenovation:
+      allOf:
+        - $ref: '#/components/schemas/EstateBasic'
+        - properties:
+            type:
+              $ref: '#/components/schemas/EstateTypeRenovation'
+            estateValue:
+              $ref: '#/components/schemas/EstateValue'
+      description: Immobiliendaten für einen Umbau oder eine Modernisierung
+    EstateDebtRescheduling:
+      allOf:
+        - $ref: '#/components/schemas/EstateBasic'
+        - properties:
+            type:
+              $ref: '#/components/schemas/EstateTypeAll'
+            estateValue:
+              $ref: '#/components/schemas/EstateValue'
+      description: Immobiliendaten für eine Anschlussfinanzierung
+    EstateOtherCapitalFinancing:
+      allOf:
+        - $ref: '#/components/schemas/EstateBasic'
+        - properties:
+            type:
+              $ref: '#/components/schemas/EstateTypeAll'
+            estateValue:
+              $ref: '#/components/schemas/EstateValue'
+      description: Immobiliendaten für eine Kapitalbeschaffung
+    EstateCountry:
+      type: string
+      description: Land (ISO 3166 ALPHA-2)
+      example: DE
+    EstateZip:
+      pattern: '^\d{4,5}$'
+      type: string
+      description: PLZ der Immobilie
+      example: '81369'
+    EstateTypeBuyNew:
+      type: string
+      description: "Immobilientyp:\n * `APARTMENT` - Wohnung\n * `ONE_FAMILY_HOUSE` - Einfamilienhaus\n * `SEMI_DETACHED_HOUSE` - Doppelhaushälfte\n * `TWO_FAMILY_HOUSE` - Zweifamilienhaus\n * `END_TERRACE_HOUSE` - Reiheneckhaus\n * `MID_TERRACE_HOUSE` - Reihenmittelhaus\n * `MULTI_FAMILY_HOUSE` - Mehrfamilienhaus\n"
+      x-extensible-enum:
+        - APARTMENT
+        - ONE_FAMILY_HOUSE
+        - SEMI_DETACHED_HOUSE
+        - TWO_FAMILY_HOUSE
+        - END_TERRACE_HOUSE
+        - MID_TERRACE_HOUSE
+        - MULTI_FAMILY_HOUSE
+    EstateTypeConstruction:
+      type: string
+      description: "Immobilientyp:\n * `ONE_FAMILY_HOUSE` - Einfamilienhaus\n * `SEMI_DETACHED_HOUSE` - Doppelhaushälfte\n * `TWO_FAMILY_HOUSE` - Zweifamilienhaus\n * `END_TERRACE_HOUSE` - Reiheneckhaus\n * `MID_TERRACE_HOUSE` - Reihenmittelhaus\n * `MULTI_FAMILY_HOUSE` - Mehrfamilienhaus\n"
+      x-extensible-enum:
+        - ONE_FAMILY_HOUSE
+        - SEMI_DETACHED_HOUSE
+        - TWO_FAMILY_HOUSE
+        - END_TERRACE_HOUSE
+        - MID_TERRACE_HOUSE
+        - MULTI_FAMILY_HOUSE
+    EstateTypeRenovation:
+      type: string
+      description: "Immobilientyp:\n * `APARTMENT` - Wohnung\n * `ONE_FAMILY_HOUSE` - Einfamilienhaus\n * `SEMI_DETACHED_HOUSE` - Doppelhaushälfte\n * `TWO_FAMILY_HOUSE` - Zweifamilienhaus\n * `END_TERRACE_HOUSE` - Reiheneckhaus\n * `MID_TERRACE_HOUSE` - Reihenmittelhaus\n * `MULTI_FAMILY_HOUSE` - Mehrfamilienhaus\n"
+      x-extensible-enum:
+        - APARTMENT
+        - ONE_FAMILY_HOUSE
+        - SEMI_DETACHED_HOUSE
+        - TWO_FAMILY_HOUSE
+        - END_TERRACE_HOUSE
+        - MID_TERRACE_HOUSE
+        - MULTI_FAMILY_HOUSE
+    EstateTypeAll:
+      type: string
+      description: "Immobilientyp:\n * `APARTMENT` - Wohnung\n * `ONE_FAMILY_HOUSE` - Einfamilienhaus\n * `SEMI_DETACHED_HOUSE` - Doppelhaushälfte\n * `TWO_FAMILY_HOUSE` - Zweifamilienhaus\n * `END_TERRACE_HOUSE` - Reiheneckhaus\n * `MID_TERRACE_HOUSE` - Reihenmittelhaus\n * `MULTI_FAMILY_HOUSE` - Mehrfamilienhaus\n * `PLOT` - Nur Grundstück\n"
+      x-extensible-enum:
+        - APARTMENT
+        - ONE_FAMILY_HOUSE
+        - SEMI_DETACHED_HOUSE
+        - TWO_FAMILY_HOUSE
+        - END_TERRACE_HOUSE
+        - MID_TERRACE_HOUSE
+        - MULTI_FAMILY_HOUSE
+        - PLOT
+    EstateUtilization:
+      type: string
+      description: "Immobiliennutzung:\n * `SELF_OCCUPIED` - selbst genutzt\n * `RENT_OUT` - vermietet\n * `PARTLY_RENT_OUT` - teilweise vermietet\n"
+      example: SELF_OCCUPIED
+      x-extensible-enum:
+        - SELF_OCCUPIED
+        - RENT_OUT
+        - PARTLY_RENT_OUT
+    VentureBasic:
+      required:
+        - amount
+        - maturity
+        - discriminator
+        - repayment
+      properties:
+        discriminator:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        maturity:
+          $ref: '#/components/schemas/Maturity'
+        repayment:
+          $ref: '#/components/schemas/BasicRepayment'
+      description: Basis-Vorhabendaten
+      discriminator:
+        propertyName: discriminator
+    VentureBuyNew:
+      allOf:
+        - $ref: '#/components/schemas/VentureBasic'
+        - required:
+            - buyPrice
+          properties:
+            buyPrice:
+              $ref: '#/components/schemas/BuyPrice'
+      description: Vorhaben für den Kauf einer neugebauten Immobilie
+    VentureBuyExisting:
+      allOf:
+        - $ref: '#/components/schemas/VentureBasic'
+        - required:
+            - buyPrice
+          properties:
+            buyPrice:
+              $ref: '#/components/schemas/BuyPrice'
+            modernisationCosts:
+              $ref: '#/components/schemas/ModernisationCosts'
+      description: Vorhaben für den Kauf einer Bestandsimmobilie
+    VentureConstruction:
+      allOf:
+        - $ref: '#/components/schemas/VentureBasic'
+        - required:
+            - constructionCosts
+          properties:
+            constructionCosts:
+              $ref: '#/components/schemas/ConstructionCosts'
+            constructionBeginDate:
+              $ref: '#/components/schemas/ConstructionBeginDate'
+            landPrice:
+              $ref: '#/components/schemas/LandPrice'
+      description: Vorhaben für ein eigenes Bauvorhaben
+    VentureRenovation:
+      allOf:
+        - $ref: '#/components/schemas/VentureBasic'
+        - required:
+            - modernisationCosts
+          properties:
+            modernisationCosts:
+              $ref: '#/components/schemas/ModernisationCosts'
+      description: Vorhaben für einen Umbau oder eine Modernisierung
+    VentureDebtRescheduling:
+      allOf:
+        - $ref: '#/components/schemas/VentureBasic'
+        - required:
+            - dueDate
+            - residualDebt
+          properties:
+            dueDate:
+              $ref: '#/components/schemas/DueDate'
+            residualDebt:
+              $ref: '#/components/schemas/ResidualDebt'
+      description: Vorhaben für eine Anschlussfinanzierung
+    VentureOtherCapitalFinancing:
+      allOf:
+        - $ref: '#/components/schemas/VentureBasic'
+        - properties:
+            residualDebt:
+              $ref: '#/components/schemas/ResidualDebt'
+      description: Vorhaben für eine Kapitalbeschaffung
+    BuyPrice:
+      minimum: 0.0
+      type: number
+      description: Kaufpreis der Immobilie
+      example: 300000
+    Amount:
+      minimum: 0.0
+      type: number
+      description: Gewünschter Darlehensbetrag
+      example: 100000
+    Maturity:
+      minimum: 0.0
+      type: integer
+      description: Sollzinsbindung in Jahren
+      example: 15
+    ModernisationCosts:
+      minimum: 0.0
+      type: number
+      description: Modernisierungskosten
+      example: 50000
+    EstateValue:
+      minimum: 0.0
+      type: number
+      description: Objektwert
+      example: 200000
+    ConstructionCosts:
+      minimum: 0.0
+      type: number
+      description: Baukosten
+      example: 200000
+    LandPrice:
+      minimum: 0.0
+      type: number
+      description: Grundstückkosten
+      example: 200000
+    ConstructionBeginDate:
+      type: string
+      description: Baubeginn
+      format: date
+      example: '2020-01-30T00:00:00.0000000'
+    DueDate:
+      type: string
+      description: Zeitpunkt der Anschlussfinanzierung
+      format: date
+      example: '2020-01-30T00:00:00.0000000'
+    ResidualDebt:
+      minimum: 0.0
+      type: number
+      description: Voraussichtliche Restschuld zum Zeitpunkt der Anschlussfinanzierung
+      example: 200000
+    BasicRepayment:
+      required:
+        - repaymentType
+      properties:
+        repaymentType:
+          type: string
+      description: Tilgung in Prozent
+      discriminator:
+        propertyName: repaymentType
+    AmortisationRepayment:
+      allOf:
+        - $ref: '#/components/schemas/BasicRepayment'
+        - required:
+            - amortisation
+          properties:
+            amortisation:
+              maximum: 99.0
+              minimum: 0.0
+              type: number
+              description: Tilgung in Prozent
+              example: 2
+      description: Tilgung in Prozent
+    DesiredMonthlyRepayment:
+      allOf:
+        - $ref: '#/components/schemas/BasicRepayment'
+        - required:
+            - monthlyRepayment
+          properties:
+            monthlyRepayment:
+              minimum: 0.0
+              type: number
+              description: Monatsrate in Euro
+              example: 200
+      description: Monatsrate in Euro
+    FullRepayment:
+      allOf:
+        - $ref: '#/components/schemas/BasicRepayment'
+      description: Volltilger
+    OAuthProblem:
+      properties:
+        error:
+          type: string
+          description: Fehlermeldung
+          example: invalid_token
+        error_description:
+          type: string
+          description: Weitere Beschreibung des Fehlerbildes
+          example: Access token expired
+      description: Fehler bei der Authentifizierung
+    RFC7807Problem:
+      required:
+        - timestamp
+        - traceId
+        - instance
+        - title
+        - status
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Fehlerzeitpunkt als UTC date-time
+          format: date-time
+        type:
+          type: string
+          description: Weitere Informationen zum Fehler
+          format: uri
+          default: about:blank
+        title:
+          type: string
+          description: Fehlermeldung
+          example: Bad Request
+        status:
+          maximum: 600.0
+          exclusiveMaximum: true
+          minimum: 100.0
+          type: integer
+          description: HTTP Status Code basierend auf folgenden Error Codes (https://tools.ietf.org/html/rfc2616#section-10)
+          format: int32
+          example: 400
+        detail:
+          type: string
+          description: Weitere Beschreibung des Fehlerbildes
+          example: JSON parse error
+        traceId:
+          type: string
+          description: Trace Id des Requests
+          example: avx1234asd
+        instance:
+          type: string
+          description: Aufrufpfad
+          format: uri
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Violation'
+          description: Liste von Feldern mit fehlerhaftem Inhalt
+      description: Detaillierte Informationen zum Fehler
+    Violation:
+      properties:
+        field:
+          type: string
+          description: Name des Feldes
+          example: venture.amount
+        message:
+          type: string
+          description: Beschreibung des Fehlers
+          example: must be greater than or equal to 0
+      description: Beschreibung eines fehlerhaften Feldwertes
+    SuccessTopRateResponse-json:
+      properties:
+        nominalInterest:
+          minimum: 0.0
+          type: number
+          description: Sollzins in Prozent
+          example: 1.42
+        effectiveInterest:
+          minimum: 0.0
+          type: number
+          description: Effektivzins in Prozent
+          example: 1.43
+        monthlyRepayment:
+          minimum: 0.0
+          type: number
+          description: Monatliche Rückzahlung in Euro
+          example: 991.09
+        totalLoanDuration:
+          minimum: 0.0
+          type: integer
+          description: Gesamtlaufzeit in Monaten
+          example: 180
+        remainingDebtAfterFixedPeriod:
+          minimum: 0.0
+          type: number
+          description: Restschuld in Euro zum Zinsbindungsende
+          example: 106036.01
+      description: Ergebnis der Topzins Berechnung
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+security:
+  - apiKeyHeader: [ ]
+  - apiKeyQuery: [ ]
