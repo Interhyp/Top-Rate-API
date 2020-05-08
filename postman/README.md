@@ -1,0 +1,8 @@
+# Postman Nutzung
+## Einleitung
+
+Zum Testen der APIs importieren Sie bitte die hier hinterlegten Collection und Enviroment Dateien.  
+Bitte passen Sie Ihre übermittelten Login Daten im jeweiligen Environment an.  
+Alternativ können Sie direkt die folgenden Links zum Import in Postman nutzen.  
+  
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/f661f9bf9655b80d1ff3#?env%5BInterhyp%20API%20Gateway%20Test%20Blank%5D=W3sia2V5IjoiYmVhcmVyVG9rZW4iLCJ2YWx1ZSI6IiIsImVuYWJsZWQiOnRydWV9LHsia2V5IjoiTGFQLUJhc2VMaW5rIiwidmFsdWUiOiJodHRwczovL2ludGVyaHlwLWV4dGVybmFsLWFwaS1tYW5hZ2VtZW50LXRlc3QuYXp1cmUtYXBpLm5ldC9sb2FuLWFuZC1wcm9kdWN0L3YxIiwiZW5hYmxlZCI6dHJ1ZX0seyJrZXkiOiJBdXRob3JpemF0aW9uLUJhc2VsaW5rIiwidmFsdWUiOiJodHRwczovL2ludGVyaHlwLWV4dGVybmFsLWFwaS1tYW5hZ2VtZW50LXRlc3QuYXp1cmUtYXBpLm5ldC9hdXRob3JpemF0aW9uL3YxIiwiZW5hYmxlZCI6dHJ1ZX0seyJrZXkiOiJjbGllbnRJRCIsInZhbHVlIjoiIiwiZW5hYmxlZCI6dHJ1ZX0seyJrZXkiOiJjbGllbnRTZWNyZXQiLCJ2YWx1ZSI6IiIsImVuYWJsZWQiOnRydWV9LHsia2V5IjoidXNlcm5hbWUiLCJ2YWx1ZSI6IiIsImVuYWJsZWQiOnRydWV9LHsia2V5IjoicGFzc3dvcmQiLCJ2YWx1ZSI6IiIsImVuYWJsZWQiOnRydWV9XQ==)

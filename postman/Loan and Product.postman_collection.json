@@ -1,0 +1,318 @@
+{
+	"info": {
+		"_postman_id": "f417d121-ce66-4ae1-af5b-d0a9d77e1a54",
+		"name": "Loan and Product",
+		"description": "Beispielaufrufe für die Loan and Product API\n\nJeder Aufruf benötigt einen Authorisierungstoken.\n\nDieser kann und wird über den Aufruf \"Token abrufen\" in eine Variable gespeichert und kann somit genutzt werden.\n\nÜber das Environment, können die jeweiligen Links und Authentifizierungsdaten gewechselt werden.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authorization - Token abrufen",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "20946b45-91fc-484f-94da-d2c02ea9094c",
+						"exec": [
+							"pm.test(pm.info.requestName, () => {",
+							"    pm.response.to.not.be.error;",
+							"    pm.response.to.not.have.jsonBody('error');",
+							"});",
+							"pm.environment.set(\"bearerToken\", pm.response.json().access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{clientID}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{clientSecret}}",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{Authorization-Baselink}}/protocol/openid-connect/token",
+					"host": [
+						"{{Authorization-Baselink}}"
+					],
+					"path": [
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Loan and Product - TopZins - Kauf Neubau",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"discriminator\": \"ReasonBuyNewRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateBuyNew\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"APARTMENT\"\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureBuyNew\",\r\n    \"amount\": 85000,\r\n    \"maturity\": 30,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"FullRepayment\"\r\n    },\r\n    \"buyPrice\": 300000\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "{{LaP-BaseLink}}/top-rate",
+					"host": [
+						"{{LaP-BaseLink}}"
+					],
+					"path": [
+						"top-rate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Loan and Product - TopZins - Kauf Bestandsimmobilie",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"discriminator\": \"ReasonBuyExistingRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateBuyExisting\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"APARTMENT\"\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureBuyExisting\",\r\n    \"amount\": 85000,\r\n    \"maturity\": 10,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"AmortisationRepayment\",\r\n      \"amortisation\": 3.0\r\n    },\r\n    \"buyPrice\": 300000\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "{{LaP-BaseLink}}/top-rate",
+					"host": [
+						"{{LaP-BaseLink}}"
+					],
+					"path": [
+						"top-rate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Loan and Product - TopZins - Bauvorhaben",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"discriminator\": \"ReasonConstructionRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateConstruction\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"ONE_FAMILY_HOUSE\"\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureConstruction\",\r\n    \"amount\": 85000,\r\n    \"maturity\": 10,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"AmortisationRepayment\",\r\n      \"amortisation\": 3.0\r\n    },\r\n    \"constructionCosts\": 300000,\r\n    \"constructionBeginDate\": \"2020-01-30\",\r\n    \"landPrice\": 50000\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "{{LaP-BaseLink}}/top-rate",
+					"host": [
+						"{{LaP-BaseLink}}"
+					],
+					"path": [
+						"top-rate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Loan and Product - TopZins - Umbau / Modernisierung",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"discriminator\": \"ReasonRenovationRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateRenovation\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"ONE_FAMILY_HOUSE\",\r\n    \"estateValue\": 500000\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureRenovation\",\r\n    \"amount\": 15000,\r\n    \"maturity\": 10,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"AmortisationRepayment\",\r\n      \"amortisation\": 3.0\r\n    },\r\n    \"modernisationCosts\": 30000\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "{{LaP-BaseLink}}/top-rate",
+					"host": [
+						"{{LaP-BaseLink}}"
+					],
+					"path": [
+						"top-rate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Loan and Product - TopZins - Anschlussfinanzierung",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"discriminator\": \"ReasonDebtReschedulingRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateDebtRescheduling\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"ONE_FAMILY_HOUSE\",\r\n    \"estateValue\": 500000\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureDebtRescheduling\",\r\n    \"amount\": 15000,\r\n    \"maturity\": 10,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"AmortisationRepayment\",\r\n      \"amortisation\": 3.0\r\n    },\r\n    \"residualDebt\": 30000,\r\n    \"dueDate\": \"2020-01-01\"\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "{{LaP-BaseLink}}/top-rate",
+					"host": [
+						"{{LaP-BaseLink}}"
+					],
+					"path": [
+						"top-rate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Loan and Product - TopZins - Kapitalbeschaffung",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"discriminator\": \"ReasonOtherCapitalFinancingRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateOtherCapitalFinancing\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"ONE_FAMILY_HOUSE\",\r\n    \"estateValue\": 500000\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureOtherCapitalFinancing\",\r\n    \"amount\": 15000,\r\n    \"maturity\": 10,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"AmortisationRepayment\",\r\n      \"amortisation\": 3.0\r\n    }\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "{{LaP-BaseLink}}/top-rate",
+					"host": [
+						"{{LaP-BaseLink}}"
+					],
+					"path": [
+						"top-rate"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0c705ffb-0150-4070-af04-2da020c1ce27",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "e9692688-9447-465f-87c0-02f8b3cd22ff",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
