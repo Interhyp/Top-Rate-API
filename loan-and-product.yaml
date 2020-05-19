@@ -4,7 +4,9 @@ info:
   title: 'Loan and Product'
   description: |-
     Mit dieser API erhalten Sie die Möglichkeit verschiedene Zinsberechnungen durchzuführen.  
-    Über 400 Bankpartner liefern die Basis für die Berechnungen.
+    Über 400 Bankpartner liefern die Basis für die Berechnungen.    
+    Weitere Dateien (z.B. Postman Collections) finden Sie auf <a
+    href="https://github.com/Interhyp/Loan-And-Product-API" target="_blank">GitHub</a>.
   termsOfService: "http://prohyp.de"
   contact:
     name: Prohyp GmbH / Accountmanagement
@@ -317,7 +319,7 @@ components:
             estateValue:
               $ref: '#/components/schemas/EstateValue'
       required:
-        - estateValue              
+        - estateValue
 
     EstateDebtRescheduling:
       description: Immobiliendaten für eine Anschlussfinanzierung
