@@ -54,6 +54,8 @@ paths:
                 country: DE
                 zip: '00135'
                 city: München
+              commission:
+                external: 1.43
               estate:
                 discriminator: EstateBuyNew
                 country: DE
@@ -139,6 +141,8 @@ components:
               * `ReasonOtherCapitalFinancingRequest` - Request Daten für eine Kapitalbeschaffung
         applicant:
           $ref: '#/components/schemas/Applicant'
+        commission:
+          $ref: '#/components/schemas/CommissionInfo'
       discriminator:
         propertyName: discriminator
 
@@ -226,6 +230,10 @@ components:
     TopRateResponse:
       description: Ergebnis der Topzins Berechnung
       properties:
+        providerName:
+          type: string
+          description: Name des Providers
+          example: Eine deutsche Bank
         nominalInterest:
           type: number
           minimum: 0
@@ -257,6 +265,7 @@ components:
       properties:
         country:
           type: string
+          pattern: '^[A-Z]{2}$'
           description: Land (ISO 3166 ALPHA-2).
           example: "DE"
         zip:
@@ -269,6 +278,15 @@ components:
           description: aktueller Wohnort in Deutschland
           example: "München"
 
+    CommissionInfo:
+      description: Informationen zur Provisionsverteilung
+      properties:
+        external:
+          type: number
+          minimum: 0
+          description: gewünschte Provision in Prozent
+          example: 1.43
+
     EstateBasic:
       description: Basis-Immobiliendaten
       properties:
@@ -280,8 +298,11 @@ components:
           $ref: '#/components/schemas/EstateZip'
         utilization:
           $ref: '#/components/schemas/EstateUtilization'
+        type:
+          $ref: '#/components/schemas/EstateTypeAll'  
       required:
         - discriminator
+        - utilization
       discriminator:
         propertyName: discriminator
 
@@ -292,6 +313,8 @@ components:
         - properties:
             type:
               $ref: '#/components/schemas/EstateTypeBuyNew'
+      required:        
+        - type
 
     EstateBuyExisting:
       description: Immobiliendaten für den Kauf einer Bestandsimmobilie
@@ -300,6 +323,8 @@ components:
         - properties:
             type:
               $ref: '#/components/schemas/EstateTypeAll'
+      required:
+        - type
 
     EstateConstruction:
       description: Immobiliendaten für ein eigenes Bauvorhaben
@@ -308,6 +333,8 @@ components:
         - properties:
             type:
               $ref: '#/components/schemas/EstateTypeConstruction'
+      required:
+        - type              
 
     EstateRenovation:
       description: Immobiliendaten für einen Umbau oder eine Modernisierung
@@ -320,6 +347,7 @@ components:
               $ref: '#/components/schemas/EstateValue'
       required:
         - estateValue
+        - type
 
     EstateDebtRescheduling:
       description: Immobiliendaten für eine Anschlussfinanzierung
@@ -332,6 +360,7 @@ components:
               $ref: '#/components/schemas/EstateValue'
       required:
         - estateValue
+        - type        - 
 
     EstateOtherCapitalFinancing:
       description: Immobiliendaten für eine Kapitalbeschaffung
@@ -344,9 +373,11 @@ components:
               $ref: '#/components/schemas/EstateValue'
       required:
         - estateValue
+        - type
 
     EstateCountry:
       type: string
+      pattern: '^[A-Z]{2}$'
       description: Land (ISO 3166 ALPHA-2)
       example: "DE"
 
