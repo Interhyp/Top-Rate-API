@@ -1,12 +1,12 @@
 openapi: 3.0.2
 info:
   version: 'v1.1'
-  title: 'Loan and Product'
+  title: 'Top Rate'
   description: |-
-    Mit dieser API erhalten Sie die Möglichkeit verschiedene Zinsberechnungen durchzuführen.  
+    Mit dieser API erhalten Sie die Möglichkeit den TopZins für Ihre Angaben zu ermitteln.  
     Über 400 Bankpartner liefern die Basis für die Berechnungen.    
     Weitere Dateien (z.B. Postman Collections) finden Sie auf <a
-    href="https://github.com/Interhyp/Loan-And-Product-API" target="_blank">GitHub</a>.
+    href="https://github.com/Interhyp/Top-Rate-API" target="_blank">GitHub</a>.
   termsOfService: "http://prohyp.de"
   contact:
     name: Prohyp GmbH / Accountmanagement
@@ -17,17 +17,17 @@ info:
     backgroundColor: "#FFFFFF"
     altText: "Prohyp logo"
 servers:
-  - url: https://interhyp-external-api-management-production.azure-api.net/loan-and-product/v1
+  - url: https://interhyp-external-api-management-production.azure-api.net/top-rate/v1
     description: Production
-  - url: https://interhyp-external-api-management-test.azure-api.net/loan-and-product/v1
+  - url: https://interhyp-external-api-management-test.azure-api.net/top-rate/v1
     description: Test
 paths:
-  /top-rate:
+  /:
     post:
       operationId: top-rate
       summary: Topzins
       tags:
-        - loan-and-product
+        - top-rate
       description: |-
         Mit diesem Endpunkt erhalten Sie die Berechnung des Topzins.  
         **Möglicher Usecase**  
@@ -299,7 +299,7 @@ components:
         utilization:
           $ref: '#/components/schemas/EstateUtilization'
         type:
-          $ref: '#/components/schemas/EstateTypeAll'  
+          $ref: '#/components/schemas/EstateTypeAll'
       required:
         - discriminator
         - utilization
@@ -313,7 +313,7 @@ components:
         - properties:
             type:
               $ref: '#/components/schemas/EstateTypeBuyNew'
-      required:        
+      required:
         - type
 
     EstateBuyExisting:
@@ -334,7 +334,7 @@ components:
             type:
               $ref: '#/components/schemas/EstateTypeConstruction'
       required:
-        - type              
+        - type
 
     EstateRenovation:
       description: Immobiliendaten für einen Umbau oder eine Modernisierung
@@ -360,7 +360,7 @@ components:
               $ref: '#/components/schemas/EstateValue'
       required:
         - estateValue
-        - type        - 
+        - type
 
     EstateOtherCapitalFinancing:
       description: Immobiliendaten für eine Kapitalbeschaffung
