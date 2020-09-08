@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "3ac95689-f0ac-4ac1-a996-d8a46696e5d0",
 		"name": "Top Rate",
-		"description": "Beispielaufrufe für die Top Rate API\n\nFür jeden Aufruf, wird ein Authorisierungstoken gebraucht.\n\nDieser kann und wird über den Aufruf \"getToken\" in eine Varaible gespeichert und kann somit genutzt werden.\n\nÜber das Environment, können die jeweiligen Links und Authentifizierungsdaten gewechselt werden",
+		"description": "Beispielaufrufe für die Top Rate API\n\nFür jeden Aufruf, wird ein Authorisierungstoken gebraucht.\n\nDieser kann und wird über den Aufruf \"getToken\" in eine Variable gespeichert und kann somit genutzt werden.\n\nÜber das Environment, können die jeweiligen Links und Authentifizierungsdaten gewechselt werden",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -101,11 +101,13 @@
 					"raw": "{\r\n  \"discriminator\": \"ReasonBuyNewRequest\",\r\n  \"commission\": {\r\n    \"external\": \"1.0\"\r\n  },\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateBuyNew\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"APARTMENT\"\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureBuyNew\",\r\n    \"amount\": 85000,\r\n    \"maturity\": 30,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"FullRepayment\"\r\n    },\r\n    \"buyPrice\": 300000\r\n  }\r\n}"
 				},
 				"url": {
-					"raw": "{{TopRate-BaseLink}}/",
+					"raw": "{{Gateway-BaseLink}}/top-rate/v1/",
 					"host": [
-						"{{TopRate-BaseLink}}"
+						"{{Gateway-BaseLink}}"
 					],
 					"path": [
+						"top-rate",
+						"v1",
 						""
 					]
 				}
@@ -137,11 +139,13 @@
 					"raw": "{\r\n  \"discriminator\": \"ReasonBuyExistingRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateBuyExisting\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"APARTMENT\"\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureBuyExisting\",\r\n    \"amount\": 85000,\r\n    \"maturity\": 10,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"AmortisationRepayment\",\r\n      \"amortisation\": 3.0\r\n    },\r\n    \"buyPrice\": 300000\r\n  }\r\n}"
 				},
 				"url": {
-					"raw": "{{TopRate-BaseLink}}/",
+					"raw": "{{Gateway-BaseLink}}/top-rate/v1/",
 					"host": [
-						"{{TopRate-BaseLink}}"
+						"{{Gateway-BaseLink}}"
 					],
 					"path": [
+						"top-rate",
+						"v1",
 						""
 					]
 				}
@@ -173,11 +177,13 @@
 					"raw": "{\r\n  \"discriminator\": \"ReasonConstructionRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateConstruction\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"ONE_FAMILY_HOUSE\"\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureConstruction\",\r\n    \"amount\": 85000,\r\n    \"maturity\": 10,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"AmortisationRepayment\",\r\n      \"amortisation\": 3.0\r\n    },\r\n    \"constructionCosts\": 300000,\r\n    \"constructionBeginDate\": \"2020-01-30\",\r\n    \"landPrice\": 50000\r\n  }\r\n}"
 				},
 				"url": {
-					"raw": "{{TopRate-BaseLink}}/",
+					"raw": "{{Gateway-BaseLink}}/top-rate/v1/",
 					"host": [
-						"{{TopRate-BaseLink}}"
+						"{{Gateway-BaseLink}}"
 					],
 					"path": [
+						"top-rate",
+						"v1",
 						""
 					]
 				}
@@ -209,11 +215,13 @@
 					"raw": "{\r\n  \"discriminator\": \"ReasonRenovationRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateRenovation\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"ONE_FAMILY_HOUSE\",\r\n    \"estateValue\": 500000\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureRenovation\",\r\n    \"amount\": 15000,\r\n    \"maturity\": 10,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"AmortisationRepayment\",\r\n      \"amortisation\": 3.0\r\n    },\r\n    \"modernisationCosts\": 30000\r\n  }\r\n}"
 				},
 				"url": {
-					"raw": "{{TopRate-BaseLink}}/",
+					"raw": "{{Gateway-BaseLink}}/top-rate/v1/",
 					"host": [
-						"{{TopRate-BaseLink}}"
+						"{{Gateway-BaseLink}}"
 					],
 					"path": [
+						"top-rate",
+						"v1",
 						""
 					]
 				}
@@ -245,11 +253,13 @@
 					"raw": "{\r\n  \"discriminator\": \"ReasonDebtReschedulingRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateDebtRescheduling\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"ONE_FAMILY_HOUSE\",\r\n    \"estateValue\": 500000\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureDebtRescheduling\",\r\n    \"amount\": 15000,\r\n    \"maturity\": 10,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"AmortisationRepayment\",\r\n      \"amortisation\": 3.0\r\n    },\r\n    \"residualDebt\": 30000,\r\n    \"dueDate\": \"2020-01-01\"\r\n  }\r\n}"
 				},
 				"url": {
-					"raw": "{{TopRate-BaseLink}}/",
+					"raw": "{{Gateway-BaseLink}}/top-rate/v1/",
 					"host": [
-						"{{TopRate-BaseLink}}"
+						"{{Gateway-BaseLink}}"
 					],
 					"path": [
+						"top-rate",
+						"v1",
 						""
 					]
 				}
@@ -257,7 +267,7 @@
 			"response": []
 		},
 		{
-			"name": "Loan and Product - TopZins - Kapitalbeschaffung",
+			"name": "Top Rate - TopZins - Kapitalbeschaffung",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -281,12 +291,14 @@
 					"raw": "{\r\n  \"discriminator\": \"ReasonOtherCapitalFinancingRequest\",\r\n  \"applicant\": {\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"city\": \"München\"\r\n  },\r\n  \"estate\": {\r\n    \"discriminator\": \"EstateOtherCapitalFinancing\",\r\n    \"country\": \"DE\",\r\n    \"zip\": \"81369\",\r\n    \"utilization\": \"SELF_OCCUPIED\",\r\n    \"type\": \"ONE_FAMILY_HOUSE\",\r\n    \"estateValue\": 500000\r\n  },\r\n  \"venture\": {\r\n    \"discriminator\": \"VentureOtherCapitalFinancing\",\r\n    \"amount\": 15000,\r\n    \"maturity\": 10,\r\n    \"repayment\": {\r\n      \"repaymentType\": \"AmortisationRepayment\",\r\n      \"amortisation\": 3.0\r\n    }\r\n  }\r\n}"
 				},
 				"url": {
-					"raw": "{{TopRate-BaseLink}}/top-rate",
+					"raw": "{{Gateway-BaseLink}}/top-rate/v1/",
 					"host": [
-						"{{TopRate-BaseLink}}"
+						"{{Gateway-BaseLink}}"
 					],
 					"path": [
-						"top-rate"
+						"top-rate",
+						"v1",
+						""
 					]
 				}
 			},
