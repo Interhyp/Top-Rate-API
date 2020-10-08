@@ -630,7 +630,7 @@ components:
 
 
     BasicRepayment:
-      description: Tilgung in Prozent
+      description: Art der Rückzahlung
       properties:
         repaymentType:
           type: string
