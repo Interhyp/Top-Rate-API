@@ -7,19 +7,14 @@ info:
     Über 400 Bankpartner liefern die Basis für die Berechnungen.    
     Weitere Dateien (z.B. Postman Collections) finden Sie auf <a
     href="https://github.com/Interhyp/Top-Rate-API" target="_blank">GitHub</a>.
-  termsOfService: "http://prohyp.de"
   contact:
     name: Prohyp GmbH / Accountmanagement
     url: http://www.prohyp.de
     email: AM@prohyp.de
-  x-logo:
-    url: "https://www.prohyp.de/prohyp-assets/images/logo-svg.svg?1508412251"
-    backgroundColor: "#FFFFFF"
-    altText: "Prohyp logo"
 servers:
-  - url: https://interhyp-external-api-management-production.azure-api.net/top-rate/v1
+  - url: https://api.prohyp.de/top-rate/v1
     description: Production
-  - url: https://interhyp-external-api-management-test.azure-api.net/top-rate/v1
+  - url: https://api-test.prohyp.de/top-rate/v1
     description: Test
 paths:
   /:
@@ -36,7 +31,7 @@ paths:
         - name: Authorization
           in: header
           description: |-
-            Access Token im Bearer Format (siehe API "Authorisierung")  
+            Access Token im Bearer Format (siehe API "Authorization")
             Beispiel:  
             Bearer xxx.yyy.zzz
           schema:
