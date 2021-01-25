@@ -42,23 +42,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TopRateRequest'
+              $ref: '#/components/schemas/TopRate'
             example:
-              discriminator: ReasonBuyNewRequest
+              financingReason: ReasonBuyNew
               applicant:
                 country: DE
                 zip: '00135'
                 city: München
               commission:
-                external: 1.43
+                desiredCommissionPercentage: 1.43
               estate:
-                discriminator: EstateBuyNew
+                estateType: EstateBuyNew
                 country: DE
                 zip: 81369
                 utilization: SELF_OCCUPIED
                 type: APARTMENT
               venture:
-                discriminator: VentureBuyNew
+                ventureType: VentureBuyNew
                 amount: 85000
                 maturity: 15
                 repayment:
@@ -118,50 +118,50 @@ components:
             $ref: '#/components/schemas/TopRateResponse'
 
   schemas:
-    TopRateRequest:
-      description: Basis Request Daten
+    TopRate:
+      description: Basisdaten für Topzins
       required:
-        - discriminator
+        - financingReason
         - applicant
       properties:
-        discriminator:
+        financingReason:
           type: string
           description: >
-            Aufruftyp:
-              * `ReasonBuyNewRequest` - Request für den Kauf einer neugebauten Immobilie
-              * `ReasonBuyExistingRequest` - Request für den Kauf einer Bestandsimmobilie
-              * `ReasonConstructionRequest` - Request für ein eigenes Bauvorhaben
-              * `ReasonRenovationRequest` - Request für einen Umbau oder eine Modernisierung
-              * `ReasonDebtReschedulingRequest` - Request Daten für eine Anschlussfinanzierung
-              * `ReasonOtherCapitalFinancingRequest` - Request Daten für eine Kapitalbeschaffung
+            Finanzierungsgrund:
+              * `ReasonBuyNew` - Daten für den Kauf einer neugebauten Immobilie
+              * `ReasonBuyExisting` - Daten für den Kauf einer Bestandsimmobilie
+              * `ReasonConstruction` - Daten für ein eigenes Bauvorhaben
+              * `ReasonRenovation` - Daten für einen Umbau oder eine Modernisierung
+              * `ReasonDebtRescheduling` - Daten für eine Anschlussfinanzierung
+              * `ReasonOtherCapitalFinancing` - Daten für eine Kapitalbeschaffung
         applicant:
           $ref: '#/components/schemas/Applicant'
         commission:
           $ref: '#/components/schemas/CommissionInfo'
       discriminator:
-        propertyName: discriminator
+        propertyName: financingReason
 
 
-    ReasonBuyNewRequest:
-      description: Request Daten für den Kauf einer neugebauten Immobilie
+    ReasonBuyNew:
+      description: Daten für den Kauf einer neugebauten Immobilie
       required:
         - estate
         - venture
       allOf:
-        - $ref: '#/components/schemas/TopRateRequest'
+        - $ref: '#/components/schemas/TopRate'
         - properties:
             estate:
               $ref: '#/components/schemas/EstateBuyNew'
             venture:
               $ref: '#/components/schemas/VentureBuyNew'
 
-    ReasonBuyExistingRequest:
-      description: Request Daten für den Kauf einer Bestandsimmobilie
+    ReasonBuyExisting:
+      description: Daten für den Kauf einer Bestandsimmobilie
       required:
         - estate
         - venture
       allOf:
-        - $ref: '#/components/schemas/TopRateRequest'
+        - $ref: '#/components/schemas/TopRate'
         - properties:
             estate:
               $ref: '#/components/schemas/EstateBuyExisting'
@@ -169,52 +169,52 @@ components:
               $ref: '#/components/schemas/VentureBuyExisting'
 
 
-    ReasonConstructionRequest:
-      description: Request Daten für ein eigenes Bauvorhaben
+    ReasonConstruction:
+      description: Daten für ein eigenes Bauvorhaben
       required:
         - estate
         - venture
       allOf:
-        - $ref: '#/components/schemas/TopRateRequest'
+        - $ref: '#/components/schemas/TopRate'
         - properties:
             estate:
               $ref: '#/components/schemas/EstateConstruction'
             venture:
               $ref: '#/components/schemas/VentureConstruction'
 
-    ReasonRenovationRequest:
-      description: Request Daten für einen Umbau oder eine Modernisierung
+    ReasonRenovation:
+      description: Daten für einen Umbau oder eine Modernisierung
       required:
         - estate
         - venture
       allOf:
-        - $ref: '#/components/schemas/TopRateRequest'
+        - $ref: '#/components/schemas/TopRate'
         - properties:
             estate:
               $ref: '#/components/schemas/EstateRenovation'
             venture:
               $ref: '#/components/schemas/VentureRenovation'
 
-    ReasonDebtReschedulingRequest:
-      description: Request Daten für eine Anschlussfinanzierung
+    ReasonDebtRescheduling:
+      description: Daten für eine Anschlussfinanzierung
       required:
         - estate
         - venture
       allOf:
-        - $ref: '#/components/schemas/TopRateRequest'
+        - $ref: '#/components/schemas/TopRate'
         - properties:
             estate:
               $ref: '#/components/schemas/EstateDebtRescheduling'
             venture:
               $ref: '#/components/schemas/VentureDebtRescheduling'
 
-    ReasonOtherCapitalFinancingRequest:
-      description: Request Daten für eine Kapitalbeschaffung
+    ReasonOtherCapitalFinancing:
+      description: Daten für eine Kapitalbeschaffung
       required:
         - estate
         - venture
       allOf:
-        - $ref: '#/components/schemas/TopRateRequest'
+        - $ref: '#/components/schemas/TopRate'
         - properties:
             estate:
               $ref: '#/components/schemas/EstateOtherCapitalFinancing'
@@ -229,12 +229,12 @@ components:
           type: string
           description: Name des Providers
           example: Eine deutsche Bank
-        nominalInterest:
+        nominalInterestPercentage:
           type: number
           minimum: 0
           description: Sollzins in Prozent
           example: 1.42
-        effectiveInterest:
+        effectiveInterestPercentage:
           type: number
           minimum: 0
           description: Effektivzins in Prozent
@@ -276,7 +276,7 @@ components:
     CommissionInfo:
       description: Informationen zur Provisionsverteilung
       properties:
-        external:
+        desiredCommissionPercentage:
           type: number
           minimum: 0
           description: gewünschte Provision in Prozent
@@ -285,7 +285,7 @@ components:
     EstateBasic:
       description: Basis-Immobiliendaten
       properties:
-        discriminator:
+        estateType:
           type: string
         country:
           $ref: '#/components/schemas/EstateCountry'
@@ -296,10 +296,10 @@ components:
         type:
           $ref: '#/components/schemas/EstateTypeAll'
       required:
-        - discriminator
+        - estateType
         - utilization
       discriminator:
-        propertyName: discriminator
+        propertyName: estateType
 
     EstateBuyNew:
       description: Immobiliendaten für den Kauf einer neugebauten Immobilie
@@ -478,7 +478,7 @@ components:
     VentureBasic:
       description: Basis-Vorhabendaten
       properties:
-        discriminator:
+        ventureType:
           type: string
         amount:
           $ref: '#/components/schemas/Amount'
@@ -489,10 +489,10 @@ components:
       required:
         - amount
         - maturity
-        - discriminator
+        - ventureType
         - repayment
       discriminator:
-        propertyName: discriminator
+        propertyName: ventureType
 
 
     VentureBuyNew:
