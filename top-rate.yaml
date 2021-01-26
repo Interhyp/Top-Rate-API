@@ -7,14 +7,19 @@ info:
     Über 400 Bankpartner liefern die Basis für die Berechnungen.    
     Weitere Dateien (z.B. Postman Collections) finden Sie auf <a
     href="https://github.com/Interhyp/Top-Rate-API" target="_blank">GitHub</a>.
+  termsOfService: "http://prohyp.de"
   contact:
     name: Prohyp GmbH / Accountmanagement
     url: http://www.prohyp.de
     email: AM@prohyp.de
+  x-logo:
+    url: "https://www.prohyp.de/prohyp-assets/images/logo-svg.svg?1508412251"
+    backgroundColor: "#FFFFFF"
+    altText: "Prohyp logo"
 servers:
-  - url: https://api.prohyp.de/top-rate/v1
+  - url: https://interhyp-external-api-management-production.azure-api.net/top-rate/v1
     description: Production
-  - url: https://api-test.prohyp.de/top-rate/v1
+  - url: https://interhyp-external-api-management-test.azure-api.net/top-rate/v1
     description: Test
 paths:
   /:
@@ -31,7 +36,7 @@ paths:
         - name: Authorization
           in: header
           description: |-
-            Access Token im Bearer Format (siehe API "Authorization")
+            Access Token im Bearer Format (siehe API "Authorisierung")  
             Beispiel:  
             Bearer xxx.yyy.zzz
           schema:
@@ -287,6 +292,14 @@ components:
       properties:
         estateType:
           type: string
+          description: >
+            Objektart basierend auf Finanzierungsgrund:
+              * `EstateBuyNew` - Immobiliendaten für den Kauf einer neugebauten Immobilie
+              * `EstateBuyExisting` - Immobiliendaten für den Kauf einer Bestandsimmobilie
+              * `EstateConstruction` - Immobiliendaten für ein eigenes Bauvorhaben
+              * `EstateRenovation` - Immobiliendaten für einen Umbau oder eine Modernisierung
+              * `EstateDebtRescheduling` - Immobiliendaten für eine Anschlussfinanzierung
+              * `EstateOtherCapitalFinancing` - Immobiliendaten für eine Kapitalbeschaffung
         country:
           $ref: '#/components/schemas/EstateCountry'
         zip:
@@ -480,6 +493,14 @@ components:
       properties:
         ventureType:
           type: string
+          description: >
+            Vorhabenart:
+              * `VentureBuyNew` - Vorhaben für den Kauf einer neugebauten Immobilie
+              * `VentureBuyExisting` - Vorhaben für den Kauf einer Bestandsimmobilie
+              * `VentureConstruction` - Vorhaben für ein eigenes Bauvorhaben
+              * `VentureRenovation` - Vorhaben für einen Umbau oder eine Modernisierung
+              * `VentureDebtRescheduling` - Vorhaben für eine Anschlussfinanzierung
+              * `VentureOtherCapitalFinancing` - Vorhaben für eine Kapitalbeschaffung
         amount:
           $ref: '#/components/schemas/Amount'
         maturity:
@@ -629,6 +650,11 @@ components:
       properties:
         repaymentType:
           type: string
+          description: >
+            Rückzahlungsart:
+              * `AmortisationRepayment` - Tilgung in Prozent
+              * `DesiredMonthlyRepayment` - Monatsrate in Euro
+              * `FullRepayment` - Volltilger
       required:
         - repaymentType
       discriminator:
